@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Login from './Components/Login'
+import Home from './Components/Home'
+import { TokenProvider } from './Contexts/TokenContext'
+import CustomInput from './CustomTags/CustomInput'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+
+  const [token, setToken] = useState('')
+
+  function LogOut() {
+    sessionStorage.removeItem("token")
+    setToken(sessionStorage.getItem("token"))
+  }
+
+  useEffect(() => {
+    setToken(sessionStorage.getItem("token"))
+  }, [token])
+
+  return token ? (
+    <nav>
+      {/* <Nav Bar> */}
+      <CustomInput type="button" value="LogOut" onClick={LogOut} />
+      <TokenProvider value={token}>
+        <Home />
+      </TokenProvider>
+      {/* </ Nav Bar> */}
+    </nav>
+  )
+    :
+    (
+      <Login Token={(token) => setToken(token)} />
+    )
 }
-
-export default App;
