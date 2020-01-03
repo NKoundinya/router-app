@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import CustomTable from '../CustomTags/CustomTable'
-import TRow from '../CustomTags/TRow'
+import { CustomTable, TRow } from '../CustomTags/Form'
 import TokenContext from '../Contexts/TokenContext'
 import { getData } from '../FetchData/about.request'
 
 function About() {
 
-    const [data, setData] = useState([])
+    const [data, setData] = useState(null)
 
     const tokenV = useContext(TokenContext)
 
     useEffect(() => {
-        getData(tokenV).then(result => setData(result))
+        getData(tokenV)
+            .then(result => setData(result))
+            .catch(error => setData(null))
     }, [tokenV])
 
     return data ? (
@@ -21,9 +22,8 @@ function About() {
                     data={
                         [
                             "ID",
-                            "FirstName",
-                            "LastName",
-                            "Username"
+                            "Username",
+                            "Role"
                         ]}
                     th={true}
                 />
@@ -34,9 +34,8 @@ function About() {
                             data={
                                 [
                                     element.id,
-                                    element.firstName,
-                                    element.lastName,
-                                    element.username
+                                    element.username,
+                                    element.role
                                 ]
                             }
                         />
@@ -46,7 +45,7 @@ function About() {
         </div>
     ) :
         <div>
-            Token Expired... Logout and Login to see data
+            Loading...
         </div>
 }
 

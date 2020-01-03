@@ -1,38 +1,44 @@
 import React, { useState } from 'react';
-import CustomInput from '../CustomTags/CustomInput'
+import { CustomInput } from '../CustomTags/Form'
 import Form from '../CustomTags/Form'
+import '../CSS/Form.css'
 
 function Login(props) {
 
     const [username, setUsername] = useState('')
     const [enterName, setEnterName] = useState(false)
     const [password, setPassword] = useState('')
-    const [enterPass, setEnterPass] = useState(false)
-    const [token, setToken] = useState('')
+    const [enterPassword, setEnterPassword] = useState(false)
+
+    const [wrongCreds, setWrongCreds] = useState(false)
+
+    const [token, setToken] = useState(null)
 
     function Log(e) {
         e.preventDefault();
 
         if (username === '') {
             setEnterName(true)
-            setEnterPass(false)
+            setEnterPassword(false)
             return false
         }
         if (password === '') {
             setEnterName(false)
-            setEnterPass(true)
+            setEnterPassword(true)
             return false
         }
 
         fetch
             (
-                'https://localhost:5000/users/authenticate',
+                'https://localhost:5000/login/authenticate',
                 {
                     method: 'POST',
-                    body: JSON.stringify({
-                        "username": username,
-                        "password": password
-                    }),
+                    body: JSON.stringify(
+                        {
+                            "username": username,
+                            "password": password
+                        }
+                    ),
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -40,56 +46,68 @@ function Login(props) {
             )
             .then(res => res.json())
             .then(res => setToken(res.token))
+            .catch(error => setToken(null))
 
-        props.Token(token)
-        sessionStorage.setItem("token", token)
+        if (token == null) {
+            sessionStorage.removeItem("token")
+            setWrongCreds(true)
+        } else {
+            sessionStorage.setItem("token", token)
+            props.Token(token);
+            setWrongCreds(false)
+        }
 
         return true
     }
 
     return (
         <div>
-            <Form onSubmit={Log} method='post'>
-                <div>
-                    Username:
-                </div>
-                <div>
-                    <CustomInput
-                        type="text"
-                        placeholder="UserName"
-                        value={username}
-                        onValueChange={(e) => setUsername(e.target.value)}
-                        onFocus={() => setEnterName(false)}
-                    />
-                </div>
-                {enterName ?
-                    <div>
-                        Enter Proper Username
+            <div className="container">
+                <Form onSubmit={Log} method='post'>
+                    <div className="row">
+                        <div className="col-25">
+                            <label htmlFor="Username">
+                                Username
+                            </label>
+                        </div>
+                        <div className="col-75">
+                            <CustomInput
+                                type="text"
+                                value={username}
+                                onValueChange={(e) => setUsername(e.target.value)}
+                                placeholder={'User Name'}
+                                onFocus={() => setEnterName(false)}
+                            />
+                        </div>
+                        {enterName ? <label className="red">Enter Username</label> : null}
                     </div>
-                    :
-                    null
-                }
-                <div>
-                    Password:
-                </div>
-                <div>
-                    <CustomInput
-                        type="password"
-                        value={password}
-                        placeholder="Password"
-                        onValueChange={(e) => setPassword(e.target.value)}
-                        onFocus={() => setEnterPass(false)}
-                    />
-                </div>
-                {enterPass ?
-                    <div>
-                        Enter Password
+
+                    <div className="row">
+                        <div className="col-25">
+                            <label htmlFor="Password">Password</label>
+                        </div>
+                        <div className="col-75">
+                            <CustomInput
+                                type="text"
+                                value={password}
+                                onValueChange={(e) => setPassword(e.target.value)}
+                                placeholder={'Password'}
+                                onFocus={() => setEnterPassword(false)}
+                            />
+                        </div>
+                        {enterPassword ? <label className="red">Enter Password</label> : null}
                     </div>
-                    :
-                    null
-                }
-                <CustomInput type="submit" value="LogIn" />
-            </Form>
+
+
+                    <div className="row">
+                        <CustomInput
+                            type="submit"
+                            value={"Login"}
+                        />
+                    </div>
+                    {wrongCreds == null ? <label className="red">WRONG CREDS</label> : null}
+                </Form>
+            </div>
         </div>
     )
 }
