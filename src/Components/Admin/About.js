@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { CustomTable, TRow } from '../CustomTags/Form'
-import TokenContext from '../Contexts/TokenContext'
-import { getData } from '../FetchData/about.request'
+import { CustomTable } from '../../CustomTags/Form'
+import TRow from '../../CustomTags/TRow'
+import TokenContext from '../../Contexts/TokenContext'
+import { getData } from '../../FetchData/about.request'
 
 function About() {
 

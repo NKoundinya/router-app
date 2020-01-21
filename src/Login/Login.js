@@ -9,9 +9,10 @@ function Login(props) {
     const [enterName, setEnterName] = useState(false)
     const [password, setPassword] = useState('')
     const [enterPassword, setEnterPassword] = useState(false)
-
+    
     const [wrongCreds, setWrongCreds] = useState(false)
-
+    
+    const [role, setRole] = useState('')
     const [token, setToken] = useState(null)
 
     function Log(e) {
@@ -30,7 +31,7 @@ function Login(props) {
 
         fetch
             (
-                'https://localhost:5000/login/authenticate',
+                'http://localhost:5000/login/authenticate',
                 {
                     method: 'POST',
                     body: JSON.stringify(
@@ -45,15 +46,21 @@ function Login(props) {
                 }
             )
             .then(res => res.json())
-            .then(res => setToken(res.token))
+            .then(res => {
+                setToken(res.token)
+                setRole(res.role)
+            })
             .catch(error => setToken(null))
 
         if (token == null) {
             sessionStorage.removeItem("token")
+            sessionStorage.removeItem("role")
             setWrongCreds(true)
         } else {
             sessionStorage.setItem("token", token)
+            sessionStorage.setItem("role", role)
             props.Token(token);
+            props.Role(role);
             setWrongCreds(false)
         }
 
@@ -88,7 +95,7 @@ function Login(props) {
                         </div>
                         <div className="col-75">
                             <CustomInput
-                                type="text"
+                                type="password"
                                 value={password}
                                 onValueChange={(e) => setPassword(e.target.value)}
                                 placeholder={'Password'}

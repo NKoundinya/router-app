@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import Form, { CustomInput } from '../CustomTags/Form'
-import TokenContext from '../Contexts/TokenContext'
-import '../CSS/Form.css'
+import Form, { Select, CustomInput } from '../../CustomTags/Form'
+import TokenContext from '../../Contexts/TokenContext'
+import '../../CSS/Form.css'
 
 function Users() {
 
@@ -49,9 +49,8 @@ function Users() {
             return false
         }
 
-        debugger
         return fetch
-            ('https://localhost:5000/user/add-user',
+            ('http://localhost:5000/employee/add-employee',
                 {
                     method: 'POST',
                     body: JSON.stringify(
@@ -122,11 +121,14 @@ function Users() {
                         <label htmlFor="Role">Set Role</label>
                     </div>
                     <div className="col-75">
-                        <CustomInput
-                            type="text"
-                            value={role}
+                        <Select
+                            defaultValue={"Select Role"}
+                            data={[
+                                "Admin",
+                                "Manager",
+                                "Employee"
+                            ]}
                             onValueChange={(e) => setRole(e.target.value)}
-                            placeholder={'Role'}
                             onFocus={() => setEnterRole(false)}
                         />
                     </div>

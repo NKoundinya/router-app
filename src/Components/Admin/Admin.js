@@ -1,27 +1,18 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
-    useHistory
+    Link
 } from "react-router-dom";
 import About from './About'
 import Users from './Users'
-import TokenContext, { TokenProvider } from '../Contexts/TokenContext'
-import '../CSS/Form.css'
+import TokenContext, { TokenProvider } from '../../Contexts/TokenContext'
+import '../../CSS/Form.css'
 
-function Home() {
+function Admin() {
 
     const token = useContext(TokenContext);
-    
-    // let history = useHistory()
-    
-    // useEffect(() => {
-    //     if (token === null) {
-    //         history.push("/")
-    //     }
-    // }, [history, token])
 
     return (
         <div>
@@ -56,4 +47,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default Admin;

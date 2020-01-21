@@ -46,37 +46,29 @@ export function CustomInput({
     )
 }
 
-
-export function TRow({
-    data,
-    th = false
+export function Select({
+    data = [],
+    onValueChange,
+    defaultValue,
+    onFocus
 }) {
-    if (th) {
-        return (
-            <thead className={'tHead'}>
-                <tr>
-                    {data.map((element, i) => {
-                        return (
-                            <th key={i}>
-                                {element}
-                            </th>
-                        )
-                    })}
-                </tr>
-            </thead>
-        )
-    }
     return (
-        <tbody>
-            <tr>
-                {data.map((element, i) => {
-                    return (
-                        <td key={i}>
-                            {element}
-                        </td>
-                    )
-                })}
-            </tr>
-        </tbody>
+        <select onChange={onValueChange} onFocus={onFocus}>
+            {
+                (defaultValue !== "") ?
+                    <option default={defaultValue} value={defaultValue}>
+                        {defaultValue}
+                    </option>
+                    :
+                    null
+            }
+            {
+                data.map((element, i) =>
+                    <option key={i} value={element}>
+                        {element}
+                    </option>
+                )
+            }
+        </select >
     )
 }
